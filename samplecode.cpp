@@ -113,30 +113,39 @@ int main(int argc, char* argv[]) {
 	}
 	cout << "Gerando soluções com o vizinho mais próximo." << endl;
 	// Mais próximo
-	for (int j=0;j<10;++j){
-		for (int i=0;i<10;i++){
-			solution = maisProximo(n);
-			vSolution = KTNS(solution);
-			if (vSolution<vISolution){
-				vISolution = vSolution;
-				iSolution = solution;
-				idx_inicial = 1;
-			}
+	for (int i=0;i<10;i++){
+		solution = maisProximo(n);
+		vSolution = KTNS(solution);
+		if (vSolution<vISolution){
+			vISolution = vSolution;
+			iSolution = solution;
+			idx_inicial = 1;
 		}
 	}
 	cout << "Gerando soluções com a heurística de sub-rotas." << endl;
 	// Sub Rotas
-	for (int j=0;j<10;++j){
-		for (int i=0;i<10;i++){
-			solution = sub(n);
-			vSolution = KTNS(solution);
-			if (vSolution<vISolution){
-				vISolution = vSolution;
-				iSolution = solution;
-				idx_inicial = 2;
-			}
+	for (int i=0;i<10;i++){
+		solution = sub(n);
+		vSolution = KTNS(solution);
+		if (vSolution<vISolution){
+			vISolution = vSolution;
+			iSolution = solution;
+			idx_inicial = 2;
 		}
 	}
+
+	cout << "Gerando soluções com a heurística Domino." << endl;
+	// Domino
+	for (int i=0;i<10;i++){
+		solution = domino(n);
+		vSolution = KTNS(solution);
+		if (vSolution<vISolution){
+			vISolution = vSolution;
+			iSolution = solution;
+			idx_inicial = 3;
+		}
+	}
+
 	solution = iSolution;
 	vSolution = vISolution;
 	vCorrente = vSolution;
