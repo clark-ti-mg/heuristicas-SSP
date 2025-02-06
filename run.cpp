@@ -102,4 +102,4 @@ int main(int argc, char* argv[]) {
 	fileR.close();
 	closedir(dir);
 	return 0;
-}
+}//
