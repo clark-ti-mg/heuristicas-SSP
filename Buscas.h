@@ -1325,4 +1325,84 @@ void switch_pair(std::vector<int> &solution, long &trocas){
   }
 }
 
+void ONB_m(std::vector <int>& solucao, long& valor){
+  extern std::vector<std::vector<int>> matrix;
+  extern int m;
+  std::pair<int, int>ONB1, ONB2;
+  bool melhorou = true;
+  while (melhorou){
+      melhorou = false;
+      std::vector<int> mAux1,mAux2;
+      std::vector<int> linhas;
+      for(int i = 0; i<m; ++i)
+        linhas.push_back(i);
+      unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+      shuffle (linhas.begin(), linhas.end(), std::default_random_engine(seed));
+
+      for (vector<int>::const_iterator i = linhas.begin(); i!= linhas.end(); ++i){
+        ONB1 = std::make_pair(-1,-1);
+        ONB2 = std::make_pair(-1,-1);
+        for (unsigned j=0; j<solucao.size();++j){
+          if (matrix[*i][solucao[j]]==1){
+            if (ONB1.first == -1){
+              ONB1.first = j;
+              while (j < solucao.size() && matrix[*i][solucao[j]]==1) ++j;
+              ONB1.second = j-1;
+            } else {
+              if (ONB2.first == -1){
+                ONB2.first = j;
+                while (j < solucao.size() && matrix[*i][solucao[j]]==1) ++j;
+                ONB2.second = j-1;
+              }
+            }
+            if (ONB2.first!=-1){
+              int nMovimentos = ONB1.first - ONB1.second +1;
+              int pivo = ONB1.first;
+              int TPivo = 0;
+              mAux1 = solucao;
+              mAux2 = solucao;
+              double c1,c2;
+              for (int p=0;p<nMovimentos;++p){
+                // Insiro a esquerda do 2 ONB
+                TPivo=mAux1[pivo];
+                for (int pe=pivo;pe<ONB2.first;++pe)
+                  mAux1[pe]=mAux1[pe+1];
+                mAux1[ONB2.first] = TPivo;
+                c1 = evaluation(mAux1);
+                // Insiro a direita do 2 ONB
+                TPivo=mAux2[pivo];
+                for (int pd=pivo;pd<ONB2.second;++pd)
+                  mAux2[pd]=mAux2[pd+1];
+                mAux2[ONB2.second] = TPivo;
+                c2 = evaluation(mAux2);
+                if (c1 < valor || c2 < valor){
+                  melhorou = true;
+                  if (c1<c2){
+                    // Fica à esquerda
+                    solucao = mAux1;
+                    ONB2.first = ONB2.first -1;
+                    valor = c1;
+
+                  } else {
+                    // Fica à direita
+                    solucao = mAux2;
+                    valor = c2;
+                  }
+                }
+                ++pivo;
+                mAux1=solucao;
+                mAux2=solucao;
+              } // Fim dos movimentos ONB1->ONB2
+              // Procura-se o proximo ONB
+              ONB1.first = ONB2.first;
+              ONB1.second = ONB2.second;
+              ONB2 = make_pair(-1,-1);
+            }
+          }
+        }
+      } // fim das linhas
+  } // wend
+
+}
+
 #endif
