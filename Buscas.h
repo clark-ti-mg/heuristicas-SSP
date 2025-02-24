@@ -120,14 +120,13 @@ void two_optFull(std::vector<int> &solution, long &trocas){
     for (int j = i+1;j<order.size();++j){
       inverte(solutionTemp,order[i],order[j]);
       // db_print(solutionTemp);
-      if (!isTabu(solutionTemp,0)){
-        tempTrocas = KTNS(solutionTemp);
-        if (tempTrocas < bestTrocas) { // E não for TABU
-          bestTrocas = tempTrocas;
-          bestNeighbor.clear();
-          bestNeighbor = solutionTemp;
-        } 
+      tempTrocas = KTNS(solutionTemp);
+      if (tempTrocas < bestTrocas) { // E não for TABU
+        bestTrocas = tempTrocas;
+        bestNeighbor.clear();
+        bestNeighbor = solutionTemp;
       } 
+    
         
       solutionTemp.clear();
       solutionTemp = solution;
@@ -201,15 +200,14 @@ void two_swap(std::vector<int> &solution, long &trocas){
         continue;
       solutionTemp[order[i]] = job2;
       solutionTemp[order2[j]] = job1;
-      if (!isTabu(solutionTemp,1)){
-        tempTrocas = KTNS(solutionTemp);
-        if (tempTrocas<bestTrocas){
-          // feito = true;
-          bestTrocas = tempTrocas;
-          bestNeighbor.clear();
-          bestNeighbor = solutionTemp;
-        }
+      tempTrocas = KTNS(solutionTemp);
+      if (tempTrocas<bestTrocas){
+        // feito = true;
+        bestTrocas = tempTrocas;
+        bestNeighbor.clear();
+        bestNeighbor = solutionTemp;
       }
+
       solutionTemp[order[i]] = job1;
       solutionTemp[order2[j]] = job2;
     }
