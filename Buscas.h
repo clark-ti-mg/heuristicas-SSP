@@ -18,9 +18,9 @@
 #define MAXBIT 40
 extern std::vector < std::bitset <MAXBIT> > bitMatrix;
 extern std::vector<unsigned>tProcessamento;
-extern const int tabu_size;
-extern std::size_t tabu[2][500];
-extern int idx_tabu;
+// extern const int tabu_size;
+// extern std::size_t tabu[2][500];
+// extern int idx_tabu;
 
 
 
@@ -53,13 +53,13 @@ void db_print(vector<int> s){
   cout <<"\n";
 }
 
-bool isTabu(std::vector<int> s, int p){
-  std::size_t hash_value = hash_vector(s);
-  for (int i=0;i<idx_tabu;i++)
-    if (tabu[p][i]==hash_value)
-      return true;
-  return false;
-}
+// bool isTabu(std::vector<int> s, int p){
+//   std::size_t hash_value = hash_vector(s);
+//   for (int i=0;i<idx_tabu;i++)
+//     if (tabu[p][i]==hash_value)
+//       return true;
+//   return false;
+// }
 
 void rotacao(std::vector<int> &solution, long &trocas){
 	int aux;
@@ -139,38 +139,38 @@ void two_optFull(std::vector<int> &solution, long &trocas){
   
 }
 
-void two_optBI(std::vector<int> &solution, long &trocas){
-  long tempTrocas, auxTrocas;
-	std::vector<int>solutionTemp;
-  vector<int> order; // Ordem em que os vértices serão acessados.
-  bool feito = false;
-  int a,b;
-  solutionTemp.clear();
-  solutionTemp = solution;
-  for (unsigned i=0;i<solutionTemp.size();++i){
-    order.push_back(i);
-  }
+// void two_optBI(std::vector<int> &solution, long &trocas){
+//   long tempTrocas, auxTrocas;
+// 	std::vector<int>solutionTemp;
+//   vector<int> order; // Ordem em que os vértices serão acessados.
+//   bool feito = false;
+//   int a,b;
+//   solutionTemp.clear();
+//   solutionTemp = solution;
+//   for (unsigned i=0;i<solutionTemp.size();++i){
+//     order.push_back(i);
+//   }
 
-  random_shuffle(order.begin(),order.end());
+//   random_shuffle(order.begin(),order.end());
   
-  for (int i=0;i<order.size()-1;++i){
-    for (int j = i+1;j<order.size();++j){
-      inverte(solutionTemp,order[i],order[j]);
-      tempTrocas = KTNS(solutionTemp);
-      if (tempTrocas < trocas){
-        trocas = tempTrocas;
-        a = order[i];
-        b = order[j];
-        feito = true;
-      } 
-      solutionTemp.clear();
-      solutionTemp = solution;
-    }
-  }
-  if (feito){
-    inverte(solution,a,b);
-  }
-}
+//   for (int i=0;i<order.size()-1;++i){
+//     for (int j = i+1;j<order.size();++j){
+//       inverte(solutionTemp,order[i],order[j]);
+//       tempTrocas = KTNS(solutionTemp);
+//       if (tempTrocas < trocas){
+//         trocas = tempTrocas;
+//         a = order[i];
+//         b = order[j];
+//         feito = true;
+//       } 
+//       solutionTemp.clear();
+//       solutionTemp = solution;
+//     }
+//   }
+//   if (feito){
+//     inverte(solution,a,b);
+//   }
+// }
 
 
 void two_swap(std::vector<int> &solution, long &trocas){
@@ -493,214 +493,213 @@ void three_opt(std::vector<int> &solution, long &trocas){
   }  
 
 }
-void three_optFull(std::vector<int> &solution, long &trocas){
-  std::vector<int> temp;
-  std::vector<int>bestNeighbor;
-  long trocasTemp = 0;
-  bool melhorou = true;
-  long bestTrocas = 99999999999999;
-  bestNeighbor.clear();
-  bestNeighbor = solution;
+// void three_optFull(std::vector<int> &solution, long &trocas){
+//   std::vector<int> temp;
+//   std::vector<int>bestNeighbor;
+//   long trocasTemp = 0;
+//   bool melhorou = true;
+//   long bestTrocas = 99999999999999;
+//   bestNeighbor.clear();
+//   bestNeighbor = solution;
 
-  for (int i=0;i<solution.size();++i){
-    for (int j=i+1;j<solution.size();++j){
-      for (int k=j+1;k<solution.size();++k){
-        movimento1(solution, temp, i,j,k);
-        if (!isTabu(temp,0)){
-          trocasTemp = KTNS(temp); 
-          if (trocasTemp<bestTrocas){
-            bestTrocas = trocasTemp;
-            bestNeighbor.clear();
-            bestNeighbor = temp;
-          }
-        }
+//   for (int i=0;i<solution.size();++i){
+//     for (int j=i+1;j<solution.size();++j){
+//       for (int k=j+1;k<solution.size();++k){
+//         movimento1(solution, temp, i,j,k);
+//         trocasTemp = KTNS(temp); 
+//         if (trocasTemp<bestTrocas){
+//           bestTrocas = trocasTemp;
+//           bestNeighbor.clear();
+//           bestNeighbor = temp;
+//         }
         
-        movimento2(solution, temp, i,j,k);
-        if (!isTabu(temp,0)){
-          trocasTemp = KTNS(temp); 
-          if (trocasTemp<bestTrocas){
-            bestTrocas = trocasTemp;
-            bestNeighbor.clear();
-            bestNeighbor = temp;
-          }
-        }
-
-        movimento3(solution, temp, i,j,k);
-        if (!isTabu(temp,0)){
-          trocasTemp = KTNS(temp); 
-          if (trocasTemp<bestTrocas){
-            bestTrocas = trocasTemp;
-            bestNeighbor.clear();
-            bestNeighbor = temp;
-          }
-        }  
-
-        movimento4(solution, temp, i,j,k);
-        if (!isTabu(temp,0)){
-          trocasTemp = KTNS(temp); 
-          if (trocasTemp<bestTrocas){
-            bestTrocas = trocasTemp;
-            bestNeighbor.clear();
-            bestNeighbor = temp;
-          }
-        }  
-
-        movimento5(solution, temp, i,j,k);
-        if (!isTabu(temp,0)){
-          trocasTemp = KTNS(temp); 
-          if (trocasTemp<bestTrocas){
-            bestTrocas = trocasTemp;
-            bestNeighbor.clear();
-            bestNeighbor = temp;
-          }
-        }
-
-        movimento6(solution, temp, i,j,k);
-        if (!isTabu(temp,0)){
-          trocasTemp = KTNS(temp); 
-          if (trocasTemp<bestTrocas){
-            bestTrocas = trocasTemp;
-            bestNeighbor.clear();
-            bestNeighbor = temp;
-          }
-        }
-
-        movimento7(solution, temp, i,j,k); 
-        if (!isTabu(temp,0)){
-          trocasTemp = KTNS(temp); 
-          if (trocasTemp<bestTrocas){
-            bestTrocas = trocasTemp;
-            bestNeighbor.clear();
-            bestNeighbor = temp;
-          }
-        }
-      }
-    }    
-  }  
-  solution = bestNeighbor;
-  trocas = bestTrocas;
-
-}
-
-
-
-void three_optFull_restart(std::vector<int> &solution, long &trocas){
-  std::vector<int> temp;
-  std::vector<int>bestNeighbor;
-  long trocasTemp = 0;
-  bool melhorou = true;
-  long bestTrocas = 99999999999999;
-  bestNeighbor.clear();
-  bestNeighbor = solution;
-
-  for (int i=0;i<solution.size();++i){
-    for (int j=i+1;j<solution.size();++j){
-      for (int k=j+1;k<solution.size();++k){
-        movimento1(solution, temp, i,j,k);
-        if (!isTabu(temp,0)){
-          trocasTemp = KTNS(temp); 
-          if (trocasTemp<bestTrocas){
-            bestTrocas = trocasTemp;
-            bestNeighbor.clear();
-            bestNeighbor = temp;
-            solution = bestNeighbor;
-            i=0;
-            j=0;
-            break;
-          }
-        }
         
-        movimento2(solution, temp, i,j,k);
-        if (!isTabu(temp,0)){
-          trocasTemp = KTNS(temp); 
-          if (trocasTemp<bestTrocas){
-            bestTrocas = trocasTemp;
-            bestNeighbor.clear();
-            bestNeighbor = temp;
-            solution = bestNeighbor;
-            i=0;
-            j=0;
-            break;
-          }
-        }
+//         movimento2(solution, temp, i,j,k);
+//         if (!isTabu(temp,0)){
+//           trocasTemp = KTNS(temp); 
+//           if (trocasTemp<bestTrocas){
+//             bestTrocas = trocasTemp;
+//             bestNeighbor.clear();
+//             bestNeighbor = temp;
+//           }
+//         }
 
-        movimento3(solution, temp, i,j,k);
-        if (!isTabu(temp,0)){
-          trocasTemp = KTNS(temp); 
-          if (trocasTemp<bestTrocas){
-            bestTrocas = trocasTemp;
-            bestNeighbor.clear();
-            bestNeighbor = temp;
-            solution = bestNeighbor;
-            i=0;
-            j=0;
-            break;
-          }
-        }  
+//         movimento3(solution, temp, i,j,k);
+//         if (!isTabu(temp,0)){
+//           trocasTemp = KTNS(temp); 
+//           if (trocasTemp<bestTrocas){
+//             bestTrocas = trocasTemp;
+//             bestNeighbor.clear();
+//             bestNeighbor = temp;
+//           }
+//         }  
 
-        movimento4(solution, temp, i,j,k);
-        if (!isTabu(temp,0)){
-          trocasTemp = KTNS(temp); 
-          if (trocasTemp<bestTrocas){
-            bestTrocas = trocasTemp;
-            bestNeighbor.clear();
-            bestNeighbor = temp;
-            solution = bestNeighbor;
-            i=0;
-            j=0;
-            break;
-          }
-        }  
+//         movimento4(solution, temp, i,j,k);
+//         if (!isTabu(temp,0)){
+//           trocasTemp = KTNS(temp); 
+//           if (trocasTemp<bestTrocas){
+//             bestTrocas = trocasTemp;
+//             bestNeighbor.clear();
+//             bestNeighbor = temp;
+//           }
+//         }  
 
-        movimento5(solution, temp, i,j,k);
-        if (!isTabu(temp,0)){
-          trocasTemp = KTNS(temp); 
-          if (trocasTemp<bestTrocas){
-            bestTrocas = trocasTemp;
-            bestNeighbor.clear();
-            bestNeighbor = temp;
-            solution = bestNeighbor;
-            i=0;
-            j=0;
-            break;
-          }
-        }
+//         movimento5(solution, temp, i,j,k);
+//         if (!isTabu(temp,0)){
+//           trocasTemp = KTNS(temp); 
+//           if (trocasTemp<bestTrocas){
+//             bestTrocas = trocasTemp;
+//             bestNeighbor.clear();
+//             bestNeighbor = temp;
+//           }
+//         }
 
-        movimento6(solution, temp, i,j,k);
-        if (!isTabu(temp,0)){
-          trocasTemp = KTNS(temp); 
-          if (trocasTemp<bestTrocas){
-            bestTrocas = trocasTemp;
-            bestNeighbor.clear();
-            bestNeighbor = temp;
-            solution = bestNeighbor;
-            i=0;
-            j=0;
-            break;
-          }
-        }
+//         movimento6(solution, temp, i,j,k);
+//         if (!isTabu(temp,0)){
+//           trocasTemp = KTNS(temp); 
+//           if (trocasTemp<bestTrocas){
+//             bestTrocas = trocasTemp;
+//             bestNeighbor.clear();
+//             bestNeighbor = temp;
+//           }
+//         }
 
-        movimento7(solution, temp, i,j,k); 
-        if (!isTabu(temp,0)){
-          trocasTemp = KTNS(temp); 
-          if (trocasTemp<bestTrocas){
-            bestTrocas = trocasTemp;
-            bestNeighbor.clear();
-            bestNeighbor = temp;
-            solution = bestNeighbor;
-            i=0;
-            j=0;
-            break;
-          }
-        }
-      }
-      if (j==0) break;
-    }    
-  }  
-  solution = bestNeighbor;
-  trocas = bestTrocas;
+//         movimento7(solution, temp, i,j,k); 
+//         if (!isTabu(temp,0)){
+//           trocasTemp = KTNS(temp); 
+//           if (trocasTemp<bestTrocas){
+//             bestTrocas = trocasTemp;
+//             bestNeighbor.clear();
+//             bestNeighbor = temp;
+//           }
+//         }
+//       }
+//     }    
+//   }  
+//   solution = bestNeighbor;
+//   trocas = bestTrocas;
 
-}
+// }
+
+
+
+// void three_optFull_restart(std::vector<int> &solution, long &trocas){
+//   std::vector<int> temp;
+//   std::vector<int>bestNeighbor;
+//   long trocasTemp = 0;
+//   bool melhorou = true;
+//   long bestTrocas = 99999999999999;
+//   bestNeighbor.clear();
+//   bestNeighbor = solution;
+
+//   for (int i=0;i<solution.size();++i){
+//     for (int j=i+1;j<solution.size();++j){
+//       for (int k=j+1;k<solution.size();++k){
+//         movimento1(solution, temp, i,j,k);
+//         if (!isTabu(temp,0)){
+//           trocasTemp = KTNS(temp); 
+//           if (trocasTemp<bestTrocas){
+//             bestTrocas = trocasTemp;
+//             bestNeighbor.clear();
+//             bestNeighbor = temp;
+//             solution = bestNeighbor;
+//             i=0;
+//             j=0;
+//             break;
+//           }
+//         }
+        
+//         movimento2(solution, temp, i,j,k);
+//         if (!isTabu(temp,0)){
+//           trocasTemp = KTNS(temp); 
+//           if (trocasTemp<bestTrocas){
+//             bestTrocas = trocasTemp;
+//             bestNeighbor.clear();
+//             bestNeighbor = temp;
+//             solution = bestNeighbor;
+//             i=0;
+//             j=0;
+//             break;
+//           }
+//         }
+
+//         movimento3(solution, temp, i,j,k);
+//         if (!isTabu(temp,0)){
+//           trocasTemp = KTNS(temp); 
+//           if (trocasTemp<bestTrocas){
+//             bestTrocas = trocasTemp;
+//             bestNeighbor.clear();
+//             bestNeighbor = temp;
+//             solution = bestNeighbor;
+//             i=0;
+//             j=0;
+//             break;
+//           }
+//         }  
+
+//         movimento4(solution, temp, i,j,k);
+//         if (!isTabu(temp,0)){
+//           trocasTemp = KTNS(temp); 
+//           if (trocasTemp<bestTrocas){
+//             bestTrocas = trocasTemp;
+//             bestNeighbor.clear();
+//             bestNeighbor = temp;
+//             solution = bestNeighbor;
+//             i=0;
+//             j=0;
+//             break;
+//           }
+//         }  
+
+//         movimento5(solution, temp, i,j,k);
+//         if (!isTabu(temp,0)){
+//           trocasTemp = KTNS(temp); 
+//           if (trocasTemp<bestTrocas){
+//             bestTrocas = trocasTemp;
+//             bestNeighbor.clear();
+//             bestNeighbor = temp;
+//             solution = bestNeighbor;
+//             i=0;
+//             j=0;
+//             break;
+//           }
+//         }
+
+//         movimento6(solution, temp, i,j,k);
+//         if (!isTabu(temp,0)){
+//           trocasTemp = KTNS(temp); 
+//           if (trocasTemp<bestTrocas){
+//             bestTrocas = trocasTemp;
+//             bestNeighbor.clear();
+//             bestNeighbor = temp;
+//             solution = bestNeighbor;
+//             i=0;
+//             j=0;
+//             break;
+//           }
+//         }
+
+//         movimento7(solution, temp, i,j,k); 
+//         if (!isTabu(temp,0)){
+//           trocasTemp = KTNS(temp); 
+//           if (trocasTemp<bestTrocas){
+//             bestTrocas = trocasTemp;
+//             bestNeighbor.clear();
+//             bestNeighbor = temp;
+//             solution = bestNeighbor;
+//             i=0;
+//             j=0;
+//             break;
+//           }
+//         }
+//       }
+//       if (j==0) break;
+//     }    
+//   }  
+//   solution = bestNeighbor;
+//   trocas = bestTrocas;
+
+// }
 
 
 void double_bridge(std::vector<int> &solucao, long &trocas){
@@ -1323,84 +1322,84 @@ void switch_pair(std::vector<int> &solution, long &trocas){
   }
 }
 
-void ONB_m(std::vector <int>& solucao, long& valor){
-  extern std::vector<std::vector<int>> matrix;
-  extern int m;
-  std::pair<int, int>ONB1, ONB2;
-  bool melhorou = true;
-  while (melhorou){
-      melhorou = false;
-      std::vector<int> mAux1,mAux2;
-      std::vector<int> linhas;
-      for(int i = 0; i<m; ++i)
-        linhas.push_back(i);
-      unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-      shuffle (linhas.begin(), linhas.end(), std::default_random_engine(seed));
+// void ONB_m(std::vector <int>& solucao, long& valor){
+//   extern std::vector<std::vector<int>> matrix;
+//   extern int m;
+//   std::pair<int, int>ONB1, ONB2;
+//   bool melhorou = true;
+//   while (melhorou){
+//       melhorou = false;
+//       std::vector<int> mAux1,mAux2;
+//       std::vector<int> linhas;
+//       for(int i = 0; i<m; ++i)
+//         linhas.push_back(i);
+//       unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+//       shuffle (linhas.begin(), linhas.end(), std::default_random_engine(seed));
 
-      for (vector<int>::const_iterator i = linhas.begin(); i!= linhas.end(); ++i){
-        ONB1 = std::make_pair(-1,-1);
-        ONB2 = std::make_pair(-1,-1);
-        for (unsigned j=0; j<solucao.size();++j){
-          if (matrix[*i][solucao[j]]==1){
-            if (ONB1.first == -1){
-              ONB1.first = j;
-              while (j < solucao.size() && matrix[*i][solucao[j]]==1) ++j;
-              ONB1.second = j-1;
-            } else {
-              if (ONB2.first == -1){
-                ONB2.first = j;
-                while (j < solucao.size() && matrix[*i][solucao[j]]==1) ++j;
-                ONB2.second = j-1;
-              }
-            }
-            if (ONB2.first!=-1){
-              int nMovimentos = ONB1.first - ONB1.second +1;
-              int pivo = ONB1.first;
-              int TPivo = 0;
-              mAux1 = solucao;
-              mAux2 = solucao;
-              double c1,c2;
-              for (int p=0;p<nMovimentos;++p){
-                // Insiro a esquerda do 2 ONB
-                TPivo=mAux1[pivo];
-                for (int pe=pivo;pe<ONB2.first;++pe)
-                  mAux1[pe]=mAux1[pe+1];
-                mAux1[ONB2.first] = TPivo;
-                c1 = evaluation(mAux1);
-                // Insiro a direita do 2 ONB
-                TPivo=mAux2[pivo];
-                for (int pd=pivo;pd<ONB2.second;++pd)
-                  mAux2[pd]=mAux2[pd+1];
-                mAux2[ONB2.second] = TPivo;
-                c2 = evaluation(mAux2);
-                if (c1 < valor || c2 < valor){
-                  melhorou = true;
-                  if (c1<c2){
-                    // Fica à esquerda
-                    solucao = mAux1;
-                    ONB2.first = ONB2.first -1;
-                    valor = c1;
+//       for (vector<int>::const_iterator i = linhas.begin(); i!= linhas.end(); ++i){
+//         ONB1 = std::make_pair(-1,-1);
+//         ONB2 = std::make_pair(-1,-1);
+//         for (unsigned j=0; j<solucao.size();++j){
+//           if (matrix[*i][solucao[j]]==1){
+//             if (ONB1.first == -1){
+//               ONB1.first = j;
+//               while (j < solucao.size() && matrix[*i][solucao[j]]==1) ++j;
+//               ONB1.second = j-1;
+//             } else {
+//               if (ONB2.first == -1){
+//                 ONB2.first = j;
+//                 while (j < solucao.size() && matrix[*i][solucao[j]]==1) ++j;
+//                 ONB2.second = j-1;
+//               }
+//             }
+//             if (ONB2.first!=-1){
+//               int nMovimentos = ONB1.first - ONB1.second +1;
+//               int pivo = ONB1.first;
+//               int TPivo = 0;
+//               mAux1 = solucao;
+//               mAux2 = solucao;
+//               double c1,c2;
+//               for (int p=0;p<nMovimentos;++p){
+//                 // Insiro a esquerda do 2 ONB
+//                 TPivo=mAux1[pivo];
+//                 for (int pe=pivo;pe<ONB2.first;++pe)
+//                   mAux1[pe]=mAux1[pe+1];
+//                 mAux1[ONB2.first] = TPivo;
+//                 c1 = evaluation(mAux1);
+//                 // Insiro a direita do 2 ONB
+//                 TPivo=mAux2[pivo];
+//                 for (int pd=pivo;pd<ONB2.second;++pd)
+//                   mAux2[pd]=mAux2[pd+1];
+//                 mAux2[ONB2.second] = TPivo;
+//                 c2 = evaluation(mAux2);
+//                 if (c1 < valor || c2 < valor){
+//                   melhorou = true;
+//                   if (c1<c2){
+//                     // Fica à esquerda
+//                     solucao = mAux1;
+//                     ONB2.first = ONB2.first -1;
+//                     valor = c1;
 
-                  } else {
-                    // Fica à direita
-                    solucao = mAux2;
-                    valor = c2;
-                  }
-                }
-                ++pivo;
-                mAux1=solucao;
-                mAux2=solucao;
-              } // Fim dos movimentos ONB1->ONB2
-              // Procura-se o proximo ONB
-              ONB1.first = ONB2.first;
-              ONB1.second = ONB2.second;
-              ONB2 = make_pair(-1,-1);
-            }
-          }
-        }
-      } // fim das linhas
-  } // wend
+//                   } else {
+//                     // Fica à direita
+//                     solucao = mAux2;
+//                     valor = c2;
+//                   }
+//                 }
+//                 ++pivo;
+//                 mAux1=solucao;
+//                 mAux2=solucao;
+//               } // Fim dos movimentos ONB1->ONB2
+//               // Procura-se o proximo ONB
+//               ONB1.first = ONB2.first;
+//               ONB1.second = ONB2.second;
+//               ONB2 = make_pair(-1,-1);
+//             }
+//           }
+//         }
+//       } // fim das linhas
+//   } // wend
 
-}
+// }
 
 #endif

@@ -8,6 +8,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/*
+	Comandos para execuçao do programa no terminal do Ubuntu 24.04 LTS: 
+	
+	Parametro 0: nome do programa = ./run
+	Parametro 1: arg[1] = nomeDir = nome do diretorio ./instancia/
+	Parametro 2: quantidade de repetiçoes (1 = 1*10) = 1
+
+	./run ./Tabela1/ 1
+	./run ./Tabela2/ 1
+	./run ./Tabela3/ 1
+	./run ./Tabela4/ 1
+
+	
+
+*/
+
 int main(int argc, char* argv[]) {
 	if (argc != 3) {
         std::cerr << "Diretório com as instâncias não foi informado." << std::endl;
@@ -27,34 +43,34 @@ int main(int argc, char* argv[]) {
     }
 	// Pego todas as instâncias do diretório
 	while ((entrada = readdir (dir))){
-    if (entrada->d_type == isFile){
+		if (entrada->d_type == isFile){
 			// Executo o programa N vezes
-      std::string xF = nomeDir + "solucoes/TS_SOLUCAO_"+entrada->d_name + "_10";
-      const char * x = xF.c_str();
-      FILE *TFile;// = fopen(x,"r");
-      //if (!TFile){ // Ignorar as instancias já executadas
-  			for (int i=1;i<=repeticoes;++i) {
-  				std::stringstream convert;
-  				std::cout << i << " Execucao: " << nomeDir+entrada->d_name << std::endl;
-  				convert << i;
-          std::string xF = nomeDir + "solucoes/TS_SOLUCAO_"+entrada->d_name +  "_" + convert.str();
-          x = xF.c_str();
-          std::ifstream existeInstancia;
-          existeInstancia.open(xF);
-          // if (!existeInstancia.is_open()){
-          //TFile = fopen(x,"r");
-          //if (!TFile){ // Ignorar as instancias já executadas
-    				std::string cmd = "./samplecode " + nomeDir + "solucoes/TS_SOLUCAO_"+entrada->d_name + "_" + convert.str()+ " <" + nomeDir+entrada->d_name; // + " >" + nomeDir + "solucoes/TS_SOLUCAO_"+entrada->d_name + "_" + convert.str();
-    				const char * c = cmd.c_str();
-    				int s = system(c);
-        //   } else{
-        //     existeInstancia.close();
-        //     std::cout <<  "já executado. " << std::endl;
-        //   }
-  			}
-      //} else {
-      //  std::cout << nomeDir + "solucoes/BRKGA_SOLUCAO_"+entrada->d_name + " já executado." << std::endl;
-      //}
+			std::string xF; // = nomeDir + "solucoes/TS_SOLUCAO_"+entrada->d_name + "_10";
+			const char * x; // = xF.c_str();
+			FILE *TFile;// = fopen(x,"r");
+			//if (!TFile){ // Ignorar as instancias já executadas
+			for (int i=1;i<=repeticoes;++i) {
+				std::stringstream convert;
+				std::cout << i << " Execucao: " << nomeDir+entrada->d_name << std::endl;
+				convert << i;
+				std::string xF = nomeDir + "solucoes/TS_SOLUCAO_"+entrada->d_name +  "_" + convert.str();
+				x = xF.c_str();
+				std::ifstream existeInstancia;
+				existeInstancia.open(xF);
+			// if (!existeInstancia.is_open()){
+			//TFile = fopen(x,"r");
+			//if (!TFile){ // Ignorar as instancias já executadas
+				std::string cmd = "./samplecode " + nomeDir + "solucoes/TS_SOLUCAO_"+entrada->d_name + "_" + convert.str()+ " <" + nomeDir+entrada->d_name; //+ " >"  + nomeDir + "solucoes/TS_SOLUCAO_"+entrada->d_name + "_" + convert.str();
+				const char * c = cmd.c_str();
+				int s = system(c);
+			//   } else{
+			//     existeInstancia.close();
+			//     std::cout <<  "já executado. " << std::endl;
+			//   }
+			}
+		//} else {
+		//  std::cout << nomeDir + "solucoes/BRKGA_SOLUCAO_"+entrada->d_name + " já executado." << std::endl;
+		//}
 		}
 	}
     closedir (dir);
@@ -71,7 +87,7 @@ int main(int argc, char* argv[]) {
         if (entrada->d_type == isFile){
 			 std::string nomeArq = entrada->d_name;
 			 if (nomeArq.compare("TS_RESUMO.txt")!=0){
-				 file.open(nomeDir+entrada->d_name, std::ifstream::in);
+				 file.open(nomeDir+nomeArq, std::ifstream::in);
 				 file >> dadoN;
 				 file >> dadoT;
 				 file >> dadoC;

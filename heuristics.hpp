@@ -307,8 +307,7 @@ vector<int>maisProximo(int n){
     return final;
 }
 
-
-vector<int> escolhe(int inicial, int n) {
+vector<int> escolheSub(int inicial, int n) {
     vector<int> perm;
     vector<int> permAuxFinal;
     vector<int> permAuxInicio;
@@ -420,7 +419,7 @@ vector<int>sub(int n){
     int diffAux;
     vector<int> permAux;
     for(int i = 0; i < n; i++) {
-        permAux = escolhe(i,n);
+        permAux = escolheSub(i,n);
         diffAux = KTNS(permAux);
 
         if (diffAux < diff) {
@@ -430,5 +429,194 @@ vector<int>sub(int n){
     }
     return final;
 }
+
+int diferenca(int t1, int t2, int n) {
+    int diff = 0;
+    extern vector<vector<int>> matrixFerramentas;
+
+    for(int i = 0; i < n; i++) {
+        if(matrixFerramentas[i][t1] != matrixFerramentas[i][t2]) 
+            diff++;
+    }
+
+    return diff;
+}
+
+void insercaoBarata_H(int tafI, int tafJ, int n, vector<int> &permAux) {
+    /*
+        s^k(i j) = d(i k) + d(k j) - d(i j)
+        colocar a tarefa no meio das outras tarefas (seguindo a equação acima) e
+        idenficar qual gera o menor número de trocas
+    */
+
+    int diff = MAX_INT;
+    int tam = 2;
+
+    vector<int> permIK(2);
+    vector<int> permKJ(2);
+    vector<int> permIJ(2);
+
+    int trocasIK = MAX_INT;
+    int trocasKJ = MAX_INT;
+    int trocasIJ = MAX_INT;
+    int equacao;
+    int saiu;
+    int posSaiu;
+
+    set<int> resto;
+    stack<int> candidatos;
+    stack<int> posCand;
+
+    for(int i = 0; i < n; i++) {
+        resto.insert(i);
+    }
+
+    // tirar as tarefas que já estão começando
+    for(int i = 0; i < tam; i++) {
+
+        set<int>::iterator it = resto.find(permAux[i]);
+
+        if(it != resto.end())
+            resto.erase(*it);
+
+    }
+
+    resto.erase(tafI);
+    resto.erase(tafJ);
+
+    // s^k(i j) = d(i k) + d(k j) - d(i j)
+    saiu = -1;
+
+    permIK[0] = permAux[tafI];
+    permKJ[1] = permAux[tafJ];
+
+    while (tam < n) {
+        permIJ[0] = permAux[tam-2];
+        permIJ[1] = permAux[tam-1];
+
+        permIK[0] = permAux[tam-2];
+
+        permKJ[1] = permAux[tam-1];
+        trocasIJ = KTNS(permIJ);
+
+        diff = MAX_INT;
+        // a tarefa a ser alocada é testada entre todas as tarefas que ja estão na solução parcial
+        for(set<int>::iterator it = resto.begin(); it != resto.end();it++){
+            permIK[1] = *it;
+            permKJ[0] = *it;
+
+            // cout << "Permutacao i k j: " << permIK[0] << " " << permIK[1] << " " << permKJ[1] << endl;
+
+            // diferença entre as tarefas I K
+            // trocasIK = KTNS(permIK);
+            trocasIK = diferenca(permIK[0], permIK[1], n);
+
+            // diferença entre as tarefas K J
+            // trocasKJ = KTNS(permKJ);
+            trocasKJ = diferenca(permKJ[0], permKJ[1],n);
+
+            // cout << "Trocas I K: " << trocasIK << endl;
+            // cout << "Trocas K J: " << trocasKJ << endl;
+
+            // s^k(i j) = d(i k) + d(k j) - d(i j)
+            equacao = trocasIK + trocasKJ - trocasIJ;
+            if(equacao < diff) {
+                //cout << "Melhora " << " Tarefa: " << *it << " Posicao: " << i << endl;
+                diff = equacao;
+                while(candidatos.size() > 0)
+                    candidatos.pop();
+
+                while(posCand.size() > 0)
+                    posCand.pop();
+
+                posCand.push(tam-1);
+                candidatos.push(*it);
+            } if (equacao == diff) {
+                posCand.push(tam-1);
+                candidatos.push(*it);
+            }
+        }
+
+        random_device rd;
+        uniform_int_distribution<int> dist(0, candidatos.size()-1);
+        int p = dist(rd);
+
+        for(int i = 0; i < p; i++) {
+            candidatos.pop();
+            posCand.pop();
+        }
+
+        saiu    = candidatos.top();
+        posSaiu = posCand.top();
+
+        for(int i = tam; i > posSaiu; i--) {
+            permAux[i] = permAux[i-1];
+        }
+
+        permAux[posSaiu] = saiu;
+        // cout << "Tarefa que entrou: " << candidatos.top() << endl;
+        // cout << "Posicao que entrou: " << posCand.top() << endl;
+        // cout << "Permutacao auxiliar: " << endl;
+        // for(int i = 0; i < permAux.size(); i++) 
+        //     cout << permAux[i] << " ";
+        // cout << endl;
+
+        resto.erase(saiu);
+        
+        while(candidatos.size() > 0)
+            candidatos.pop();
+
+        while(posCand.size() > 0)
+            posCand.pop();
+
+        tam++;
+    }
+    
+    
+
+}
+
+vector<int> insercaoB(int n){
+    int i = 0;
+    int j = 1;
+    int trocasAux;
+    int diff = MAX_INT;
+    vector<int> permFinal;
+    vector<int> permAux;
+    permFinal.assign(n, -1);
+    permAux.assign(n, -1);
+    
+    int tam = 2;
+
+    while(j < n) {
+        // a heuristica começa com a combinação de duas tarefas
+        permAux[0] = i;
+        permAux[1] = j;
+        insercaoBarata_H(i, j, n, permAux);
+
+        trocasAux = KTNS(permAux);
+
+        if(diff == MAX_INT) {
+            permFinal = permAux;
+            diff = trocasAux;
+        } else {
+            if (trocasAux < diff) {
+                diff = trocasAux;
+                permFinal = permAux;
+            }
+        }
+
+        permAux.assign(n, -1);
+        tam = 2;
+
+        i++;
+        j++;
+        
+    }
+    return permFinal;
+}
+
+
+
 
 #endif

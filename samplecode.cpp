@@ -45,19 +45,10 @@ std::vector<int>iSolution; // Solução inicial
 long vSolution; // Avaliação da melhor solução conhecida
 long vCorrente; // Avaliação da solução corrente
 long vISolution; // Avaliação da solução inicial
-const int tabu_size = 500;
-std::size_t tabu[2][tabu_size]; // no buscas está como constante
-int idx_tabu = 0;
-
-long tot_tabu = 0;
 
 std::ofstream fileR;
 std::ifstream file;
 std::ofstream fileSolution;
-
-
-
-
 
 int main(int argc, char* argv[]) {
 
@@ -134,10 +125,10 @@ int main(int argc, char* argv[]) {
 		}
 	}
 
-	cout << "Gerando soluções com a heurística Domino." << endl;
-	// Domino
+	cout << "Gerando soluções com a heurística de Inserçao mais barata." << endl;
+	// Inserçao mais barata
 	for (int i=0;i<10;i++){
-		solution = domino(n);
+		solution = insercaoB(n);
 		vSolution = KTNS(solution);
 		if (vSolution<vISolution){
 			vISolution = vSolution;
@@ -158,6 +149,8 @@ int main(int argc, char* argv[]) {
 	fileSolution.open(argv[1]);
 	// Corrigir cabecalho da solucao
 	fileSolution << n << " " << t << " " <<  c << " " << vISolution << " " << vSolution << " " << time_span.count() << " " << idx_inicial << endl; 
+	for (int i=0;i<solution.size();++i)
+    	fileSolution << solution[i] << " ";
 	fileSolution.close();
 	
 	cout << "Inicial: " << vISolution << " Final: " << vSolution << " Temp de execução: " << time_span.count() << " Heurística utilizada: " << idx_inicial << endl;
