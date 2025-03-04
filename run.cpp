@@ -53,14 +53,14 @@ int main(int argc, char* argv[]) {
 				std::stringstream convert;
 				std::cout << i << " Execucao: " << nomeDir+entrada->d_name << std::endl;
 				convert << i;
-				std::string xF = nomeDir + "solucoes/TS_SOLUCAO_"+entrada->d_name +  "_" + convert.str();
+				std::string xF = nomeDir + "solucoes/HS_SOLUCAO_"+entrada->d_name +  "_" + convert.str();
 				x = xF.c_str();
 				std::ifstream existeInstancia;
 				existeInstancia.open(xF);
 			// if (!existeInstancia.is_open()){
 			//TFile = fopen(x,"r");
 			//if (!TFile){ // Ignorar as instancias já executadas
-				std::string cmd = "./samplecode " + nomeDir + "solucoes/TS_SOLUCAO_"+entrada->d_name + "_" + convert.str()+ " <" + nomeDir+entrada->d_name; //+ " >"  + nomeDir + "solucoes/TS_SOLUCAO_"+entrada->d_name + "_" + convert.str();
+				std::string cmd = "./samplecode " + nomeDir + "solucoes/HS_SOLUCAO_"+entrada->d_name + "_" + convert.str()+ " <" + nomeDir+entrada->d_name; //+ " >"  + nomeDir + "solucoes/HS_SOLUCAO_"+entrada->d_name + "_" + convert.str();
 				const char * c = cmd.c_str();
 				int s = system(c);
 			//   } else{
@@ -82,11 +82,11 @@ int main(int argc, char* argv[]) {
 	std::ifstream file;
 	std::ofstream fileR;
 	std::string dadoN, dadoT, dadoC, dado, dado2, dado3, dado4, dado5, dado6, dado7, dado8, dado9, dado10, dado11, dado12, dado13,dado14,dado15,dado16;
-	fileR.open(nomeDir+"TS_RESUMO.txt");
+	fileR.open(nomeDir+"HS_RESUMO.txt");
 	while ((entrada = readdir (dir))){
         if (entrada->d_type == isFile){
 			 std::string nomeArq = entrada->d_name;
-			 if (nomeArq.compare("TS_RESUMO.txt")!=0){
+			 if (nomeArq.compare("HS_RESUMO.txt")!=0){
 				 file.open(nomeDir+nomeArq, std::ifstream::in);
 				 file >> dadoN;
 				 file >> dadoT;
@@ -95,11 +95,11 @@ int main(int argc, char* argv[]) {
 				 file >> dado2;
                  file >> dado3;
                  file >> dado4;
-				//  file >> dado5;
-				//  file >> dado6;
-				//  file >> dado7;
-				//  file >> dado8;	
-				//  file >> dado9;
+				 file >> dado5;
+				 file >> dado6;
+				 file >> dado7;
+				 file >> dado8;	
+				 file >> dado9;
 				//  file >> dado10;
 				//  file >> dado11;
 				//  file >> dado12;
@@ -107,9 +107,9 @@ int main(int argc, char* argv[]) {
 				//  file >> dado14;
 				//  file >> dado15;
 				//  file >> dado16;	
-				 fileR << entrada->d_name << " " << dadoN << " " << dadoT << " " << dadoC << " " << dado << " " << dado2 << " " << dado3 << " " << dado4 << std::endl; //<< dado4 << " ";
-				//  fileR << dado5 << " " << dado6 << " " << dado7 << " " << dado8 << " " ;
-				//  fileR << dado9 << " " << dado10 << " " << dado11 << " " << dado12 << " ";
+				fileR << entrada->d_name << " " << dadoN << " " << dadoT << " " << dadoC << " " << dado << " " << dado2 << " " << dado3 << " " << dado4 << " ";
+				fileR << dado5 << " " << dado6 << " " << dado7 << " " << dado8 << " " << dado9 << " " << std::endl;
+				//  fileR << dado10 << " " << dado11 << " " << dado12 << " ";
 				//  fileR << dado13 << " " << dado14 << " " << dado15 << " " << dado16 << " " << std::endl;
 				 file.close();
 			 }

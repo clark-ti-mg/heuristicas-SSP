@@ -44,10 +44,11 @@ std::vector<int>corrente; // Solução corrente
 std::vector<int>iSolution; // Solução inicial
 long vSolution; // Avaliação da melhor solução conhecida
 long vCorrente; // Avaliação da solução corrente
+long tSolution; // Avaliação temporária para comparações
 long vISolution; // Avaliação da solução inicial
 
-std::ofstream fileR;
-std::ifstream file;
+std::ofstream fileR; // Arquivo de resumo
+std::ifstream file; // Arquivo de soluçao individual
 std::ofstream fileSolution;
 
 int main(int argc, char* argv[]) {
@@ -143,12 +144,64 @@ int main(int argc, char* argv[]) {
 	corrente = solution;
 
 
+	int k = 0;
+	int vizinhancas = 3;
+	long melhorias[vizinhancas];
+	long execucoes[vizinhancas];
+	for (int i = 0; i < vizinhancas; i++){
+		melhorias[i] = 0;
+		execucoes[i] = 0;
+	}
+	cout << "Executando VND." << endl;
+	// VND
+	while(k < vizinhancas){
+		if (k == 0){
+			tSolution = vSolution;
+			ONB_m(solution,vSolution);
+			if (vSolution < tSolution){
+				melhorias[k]+=(tSolution-vSolution);
+				execucoes[k]++;
+				k = 0;
+			} else {
+				execucoes[k]++;
+				k++;
+			}
+		}
+		if (k==1){
+			tSolution = vSolution;
+			US(solution,vSolution);
+			if (vSolution < tSolution){
+				melhorias[k]+=(tSolution-vSolution);
+				execucoes[k]++;
+				k = 0;
+			} else {
+				execucoes[k]++;
+				k++;
+			}
+		}
+		if (k==2){
+			tSolution = vSolution;
+			two_optFull(solution,vSolution);
+			if (vSolution < tSolution){
+				melhorias[k]+=(tSolution-vSolution);
+				execucoes[k]++;
+				k = 0;
+			} else {
+				execucoes[k]++;
+				k++;
+			}
+		}
+	}
+
 	t2 = high_resolution_clock::now();
 	time_span = duration_cast<duration<double> >(t2 - t1);
 
 	fileSolution.open(argv[1]);
 	// Corrigir cabecalho da solucao
-	fileSolution << n << " " << t << " " <<  c << " " << vISolution << " " << vSolution << " " << time_span.count() << " " << idx_inicial << endl; 
+	fileSolution << n << " " << t << " " <<  c << " " << vISolution << " " << vSolution << " " << time_span.count() << " " << idx_inicial << " ";
+	for (int i=0;i<vizinhancas;++i)
+		fileSolution << melhorias[i]/execucoes[i] << " ";
+	fileSolution << endl; 
 	for (int i=0;i<solution.size();++i)
     	fileSolution << solution[i] << " ";
 	fileSolution.close();
@@ -156,6 +209,7 @@ int main(int argc, char* argv[]) {
 	cout << "Inicial: " << vISolution << " Final: " << vSolution << " Temp de execução: " << time_span.count() << " Heurística utilizada: " << idx_inicial << endl;
 	cout << "Solução:";
 	db_print(solution);
+	cout << endl;
 
 	return 0;
 }
